@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- synced from brand-packs/content; do not edit here -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Legal | Triage</title>
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0D1117">
+<link rel="stylesheet" href="brand-base.css">
+<link rel="stylesheet" href="brand-triage.css">
+<style>body { background: var(--color-bg); margin: 0; }</style>
+</head>
+<body>
+<!--
+  Canonical Legal page (Terms, Privacy and Copyright) for the app family.
+
+  This is the lawyer-reviewed generic text from the starter-template, as a portable,
+  self-contained HTML page. It themes itself from the brand-pack CSS variables
+  (tokens/base.css + packs/<slug>.css), so it looks native in whichever app hosts it.
+
+  TO USE IN AN APP:
+  1. Copy this file in (e.g. /legal.html, or a Flask template, or inline in a Worker).
+  2. Ensure the app's brand-pack tokens are loaded (or the page falls back to neutral).
+  3. Edit the CONFIG block below: operator, jurisdiction, contact, effective date,
+     and switch on only the `modules` the app actually has.
+  Genericising changes wording, so have material changes reviewed before launch,
+  especially anything on health, money, or children. UK English, no em dashes.
+-->
+<style>
+  .legal { max-width: 46rem; margin: 0 auto; padding: 3rem 1.25rem 4rem;
+    color: var(--color-text, #1a1a1e);
+    font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif);
+    line-height: 1.6; }
+  .legal h1 { font-family: var(--font-display, inherit); font-size: 2rem; margin: 0 0 .5rem; line-height: 1.15; }
+  .legal h2 { font-size: 1.25rem; margin: 2.25rem 0 .5rem; color: var(--color-text, #1a1a1e); }
+  .legal h3 { font-size: 1.05rem; margin: 1.5rem 0 .4rem; }
+  .legal p, .legal li { color: var(--color-text, #1a1a1e); }
+  .legal .muted { color: var(--color-muted, #6b6f7b); font-size: .9rem; }
+  .legal a { color: var(--brand-500, #3a6ea5); }
+  .legal ul { padding-left: 1.25rem; }
+  .legal li { margin: .15rem 0; }
+</style>
+
+<!-- A way home. A tool added to a phone's home screen has no browser Back button,
+     so without this link these pages are a dead end. -->
+<p class="page-back" style="max-width:42rem;margin:1.25rem auto 0;padding:0 1.25rem;font-family:var(--font-sans,system-ui,sans-serif);font-size:.95rem"><a href="/" style="color:var(--brand-500,#3a6ea5);text-decoration:none">&larr; Back to the app</a></p>
+<article class="legal">
+  <h1>Terms, Privacy and Copyright</h1>
+  <p class="muted">Last updated: {{EFFECTIVE_DATE}}.</p>
+
+  <p>This page explains who operates {{SERVICE}}, how we use and protect information, what technologies we place in your browser, the rules that apply when using it, and your rights in relation to your personal data.</p>
+  <p>These terms are intended to be read in plain English. By {{AGREE_ACTIONS}}, you agree to these Terms, Privacy and Copyright provisions.</p>
+  <p>These terms are governed primarily by the laws of {{JURISDICTION}}, including {{DP_LAW}}, which establishes the principal legal framework governing the processing of personal data.</p>
+
+  <h2>Who we are</h2>
+  <p>{{OPERATOR}} operates {{SERVICE}}.</p>
+  <p>For data protection purposes under {{DP_LAW}}, {{OPERATOR}} is the "data controller" responsible for determining how and why personal data is processed.</p>
+  <p>Privacy and data protection enquiries may be sent to: <a href="mailto:{{PRIVACY_EMAIL}}">{{PRIVACY_EMAIL}}</a></p>
+
+  <h2>Not professional advice</h2>
+  <p>All content made available<span data-module-inline="ai">, including conversations with {{AI_NAME}},</span> is provided for general informational and educational purposes only.</p>
+  <p>Nothing here constitutes medical, psychological, legal, financial, safeguarding, or emergency advice, and your use of it does not create any doctor-patient, therapist-client, solicitor-client, fiduciary, or other regulated professional relationship.</p>
+  <p>Seek advice from appropriately qualified professionals before making healthcare, legal, safeguarding or financial decisions. If you are experiencing an emergency, contact your local emergency services immediately.</p>
+
+  <section data-module="ai">
+    <h3>AI disclaimer</h3>
+    <p>{{AI_NAME}} is an artificial intelligence ("AI") powered tool. It is an automated software system and is not a human being, clinician, therapist, psychologist, solicitor or regulated professional.</p>
+    <p>AI-generated responses may be inaccurate, incomplete, biased, misleading, fictional, outdated or inappropriate. All outputs must be independently verified before reliance or action. To the fullest extent permitted by applicable law, {{OPERATOR}} accepts no liability for AI-generated outputs, inaccuracies or omissions, reliance placed upon responses, decisions made based on them, or interruptions, errors or failures in AI functionality. Use of {{AI_NAME}} is entirely at your own risk.</p>
+  </section>
+
+  <h2>Cookies and browser technologies</h2>
+  <p>We use cookies, local storage, session storage and similar technologies to operate the service, authenticate users, maintain sessions, improve performance, measure engagement, analyse usage, and maintain security and prevent abuse.</p>
+  <p>Cookie and tracking activities involving personal data are subject to {{DP_LAW}} and its principles relating to fairness, transparency and lawful processing.</p>
+  <p>These technologies may collect IP addresses, browser and device information, event data, page interactions, referral information, engagement metrics, approximate geographic region and session metadata. Some are strictly necessary; others may be activated based on your consent preferences. You may manage cookie settings through your browser controls. Blocking certain technologies may affect functionality.</p>
+
+  <h2>The data we collect, and why</h2>
+  <p>The information we collect depends on how you interact with the service.</p>
+  <h3>If you only browse</h3>
+  <p>We generally do not intentionally collect directly identifying personal information from casual visitors. Limited technical information such as IP address, browser type, device information and request metadata may be processed by our infrastructure and security providers for hosting, delivery, caching, abuse prevention and security monitoring.</p>
+  <section data-module="accounts">
+    <h3>If you create an account</h3>
+    <p>We may collect your email address, an encrypted password hash, authentication credentials, your preferences, and timestamps and activity records. We use this to authenticate users, operate accounts, personalise the service, maintain security and communicate with you.</p>
+  </section>
+  <section data-module="ai">
+    <h3>If you chat to {{AI_NAME}}</h3>
+    <p>We may store your messages, {{AI_NAME}}'s responses, conversation history, temporary identifiers and technical metadata associated with the interaction. This lets the assistant maintain continuity, apply usage limits, improve reliability, monitor abuse and maintain service quality.</p>
+  </section>
+  <section data-module="payments">
+    <h3>If you purchase a membership</h3>
+    <p>Payments are processed directly by our payment provider. We do not receive or store full payment card details. We may store customer and subscription identifiers, billing metadata, subscription status, and renewal and expiry dates.</p>
+  </section>
+  <section data-module="documentUpload">
+    <h3>If you upload documents</h3>
+    <p>Uploaded documents are stored in a private account-linked environment. Depending on the feature we may store original files, extracted text, redacted text, summaries and outputs, and processing metadata. Please avoid uploading highly sensitive or third-party confidential data unless you are legally authorised to do so.</p>
+  </section>
+  <h3>Sharing with third-party providers</h3>
+  <p>We share limited personal data with the service providers that help us run the service, such as hosting, infrastructure, authentication<span data-module-inline="payments">, payments</span><span data-module-inline="ai">, AI processing</span> and security. They act on our instructions under contract. We do not sell your personal data. Our providers include {{PROCESSORS}}.</p>
+  <p>Some providers may process data outside {{JURISDICTION}}. Where they do, international transfers are protected using appropriate safeguards, and {{DP_LAW}} restricts such transfers unless adequate protection exists.</p>
+
+  <h2>How we use your data</h2>
+  <p>We use personal data to provide and operate the service, authenticate users<span data-module-inline="payments">, process memberships and payments</span>, improve the service, analyse usage and performance, personalise communications, maintain security and detect abuse, investigate fraud, comply with legal obligations, and enforce our terms.</p>
+  <p>Where reasonably possible we use anonymised, aggregated or pseudonymised data for research and product development. Where data has been irreversibly anonymised so individuals are no longer identifiable, it may no longer constitute personal data under {{DP_LAW}}.</p>
+  <p>Where required by applicable law, we rely on lawful processing grounds including consent, performance of a contract, compliance with legal obligations, and legitimate interests in operating, securing and improving the service.</p>
+
+  <h2>Data retention</h2>
+  <p>We retain data only for as long as reasonably necessary for operational purposes, legal compliance, fraud prevention, dispute resolution, security, backup and recovery, and legitimate business administration. Retention periods vary by feature and legal obligation.</p>
+
+  <h2>Your rights</h2>
+  <p>Subject to {{DP_LAW}}, you may have the right to request access to your personal data, correct inaccurate information, request erasure in certain circumstances, object to or restrict certain processing, and complain to {{REGULATOR}}.</p>
+  <p>Requests may be sent to <a href="mailto:{{PRIVACY_EMAIL}}">{{PRIVACY_EMAIL}}</a>. {{REGULATOR_CAP}} acts as the supervisory authority for enforcement.</p>
+
+  <h2>Data security</h2>
+  <p>We use reasonable technical and organisational safeguards including encryption, access controls, authentication systems, audit logging, security monitoring and provider due diligence. No system can ever be completely secure and use of the service remains at your own risk.</p>
+
+  <h2>Children and young people</h2>
+  <p>Some features may not be appropriate for all minors and may require parental or guardian consent depending on the age of the user, the laws of their jurisdiction, and the nature of the service. By using the service, users represent that they are legally capable of entering into binding agreements, or have obtained the required consent.</p>
+  <p>We do not knowingly collect personal data from children in violation of applicable law. Where we become aware that we have, we may suspend or terminate the account, restrict access, delete associated data, or request verification or consent. To the fullest extent permitted by law, {{OPERATOR}} disclaims liability arising from unauthorised use by minors, false age declarations, or failure of parents or guardians to supervise use.</p>
+
+  <section data-module="payments">
+    <h2>Memberships, payments, renewals, cancellation and refunds</h2>
+    <p>Membership fees, billing intervals and included services are displayed at the point of purchase and may be varied by us from time to time. By purchasing or continuing a membership you agree that subscriptions automatically renew unless cancelled before the next billing date, that recurring charges may be processed automatically, and that continued use following a renewal date constitutes acceptance of the then-current pricing.</p>
+    <p>You are responsible for monitoring pricing and renewal dates, maintaining valid payment information, and cancelling before renewal if you do not accept revised pricing. Cancellation prevents future renewals only and does not ordinarily entitle you to a refund for the current billing period. Except where required by mandatory applicable law, payments are non-refundable, final and non-transferable.</p>
+  </section>
+
+  <h2>Acceptable use</h2>
+  <p>You agree not to use the service unlawfully, interfere with its operation or security, attempt unauthorised access, upload malicious code<span data-module-inline="ai">, misuse {{AI_NAME}}</span>, upload unlawful, abusive or harmful content, scrape or harvest data, or use the service to train external AI systems without permission. We may suspend or terminate access where these terms are breached.</p>
+
+  <h2>Copyright and intellectual property</h2>
+  <p>Unless otherwise stated, all content on the service, including text, branding, graphics, audio, video, interfaces, educational materials<span data-module-inline="ai">, {{AI_NAME}} outputs</span>, software and code, is owned by or licensed to {{OPERATOR}}.</p>
+  <p>Limited personal, non-commercial use is permitted. You may not commercially reproduce or redistribute content, train AI models on it, create derivative commercial works, remove copyright notices, or pass content off as your own without prior written permission.</p>
+
+  <h2>Limitation of liability</h2>
+  <p>To the fullest extent permitted by applicable law, including the laws of {{JURISDICTION}}, the service, its content, software, features and all related services are provided on an "as is", "as available" and "with all faults" basis, use is entirely at your own risk, and we make no representations, warranties, guarantees or undertakings of any kind, whether express, implied, statutory or otherwise.</p>
+  <p>To the maximum extent permitted by law, {{PARTIES}} and each of their respective affiliated entities, officers, directors, employees, contractors, agents, licensors, technology providers and representatives disclaim all warranties and conditions, including any implied warranties relating to accuracy, reliability, completeness, availability, merchantability, satisfactory quality, fitness for a particular purpose, uninterrupted operation, non-infringement, compatibility, security and error-free functionality.</p>
+  <p>To the fullest extent permitted by law, neither {{PARTIES_EITHER}} nor any affiliated party shall be liable for any indirect, consequential, incidental, exemplary, punitive or special damages, or for loss of profits, revenue, business, opportunity, reputation, data, or for service interruption, security incidents, third-party claims, or reliance upon<span data-module-inline="ai"> AI-generated outputs,</span> user-generated content or third-party integrations, arising from or connected with use of the service. This exclusion applies regardless of the legal basis of the claim, whether in contract, tort, negligence, breach of statutory duty, misrepresentation or otherwise, and whether or not the possibility of loss was foreseeable or advised.</p>
+  <p>To the fullest extent permitted by law, our total aggregate liability arising out of or relating to the service or these terms shall not exceed the greater of (a) the total amount paid by you to us in the preceding three (3) months, or (b) US$100. Nothing in these terms excludes or limits liability to the extent that exclusion is prohibited by applicable law; where liability cannot be excluded it is limited to the minimum extent permitted by law.</p>
+
+  <h2>Changes to these terms</h2>
+  <p>We may update these terms, notices and policies from time to time. The latest version will always appear on this page together with the revised date. Continued use of the service following changes constitutes acceptance of the updated terms.</p>
+
+  <h2>Governing law and jurisdiction</h2>
+  <p>These terms and any dispute or claim arising from them or relating to the service shall be governed by and construed in accordance with the laws of {{JURISDICTION}}, and, subject to applicable law, the courts of {{JURISDICTION}} shall have exclusive jurisdiction. Privacy and data protection obligations are principally governed by {{DP_LAW}}, enforced by {{REGULATOR}}.</p>
+</article>
+
+<script>
+/* Per-app CONFIG. Edit these values, then switch on only the modules this app has. */
+// The defaults below are the estate's, not placeholders. Change `service` and
+// `modules` per app; leave the rest alone unless a tool genuinely sits under a
+// different controller, and say why in that tool's docs/DECISIONS.md if it does.
+//
+// NOT Gender Truth's block. On 2026-07-27 these were set to Sammy / the Cayman
+// Islands / dpo@mishcon.com, copied from helenwebberley.com/legal on the assumption
+// that it spoke for the estate. It does not: Sammy is Gender Truth's AI companion,
+// not a legal entity, and that whole block belongs to Gender Truth alone (Helen,
+// 2026-07-28). helenwebberley.com's own footer gives the owner: Dr Helen Webberley.
+const LEGAL = {
+  operator: "Dr Helen Webberley",      // the entity that operates the service / data controller
+  copyrightHolder: "Dr Helen Webberley",  // who holds copyright
+  service: "Triage",
+  privacyEmail: "hello@helenwebberley.com",
+  jurisdiction: "England and Wales",
+  dpLaw: "the UK GDPR and the Data Protection Act 2018",
+  regulator: "the UK Information Commissioner's Office (ICO)",
+  processors: ["Cloudflare", "Anthropic", "Telegram", "Google"],
+  effectiveDate: "8 July 2026",
+  aiName: "Claude",
+  modules: { accounts: true, ai: true, payments: false, documentUpload: false, analytics: false },
+}
+
+;(function renderLegal() {
+  const root = document.querySelector(".legal")
+  // Remove whole sections for modules that are off.
+  root.querySelectorAll("[data-module]").forEach(el => {
+    if (!LEGAL.modules[el.getAttribute("data-module")]) el.remove()
+  })
+  // Remove inline fragments for modules that are off.
+  root.querySelectorAll("[data-module-inline]").forEach(el => {
+    if (!LEGAL.modules[el.getAttribute("data-module-inline")]) el.remove()
+  })
+  const list = (a, conj) => a.length <= 1 ? (a[0] || "our service providers")
+    : a.slice(0, -1).join(", ") + " " + (conj || "and") + " " + a[a.length - 1]
+  const m = LEGAL.modules
+  const agreeActions = ["accessing or using " + LEGAL.service]
+  if (m.accounts) agreeActions.push("creating an account")
+  if (m.ai) agreeActions.push("interacting with " + LEGAL.aiName)
+  if (m.documentUpload) agreeActions.push("uploading content")
+  if (m.payments) agreeActions.push("purchasing a membership")
+  const parties = LEGAL.operator === LEGAL.copyrightHolder ? LEGAL.operator : LEGAL.operator + ", " + LEGAL.copyrightHolder
+  const partiesEither = LEGAL.operator === LEGAL.copyrightHolder ? LEGAL.operator : LEGAL.operator + " nor " + LEGAL.copyrightHolder
+  const regulatorCap = LEGAL.regulator.charAt(0).toUpperCase() + LEGAL.regulator.slice(1)
+  const tokens = {
+    OPERATOR: LEGAL.operator, SERVICE: LEGAL.service, PRIVACY_EMAIL: LEGAL.privacyEmail,
+    JURISDICTION: LEGAL.jurisdiction, DP_LAW: LEGAL.dpLaw, REGULATOR: LEGAL.regulator,
+    REGULATOR_CAP: regulatorCap, PROCESSORS: list(LEGAL.processors), EFFECTIVE_DATE: LEGAL.effectiveDate,
+    AI_NAME: LEGAL.aiName, PARTIES: parties, PARTIES_EITHER: partiesEither,
+    AGREE_ACTIONS: list(agreeActions, "or"),
+  }
+  root.innerHTML = root.innerHTML.replace(/\{\{(\w+)\}\}/g, (m, k) => k in tokens ? tokens[k] : m)
+})()
+</script>
+
+</body>
+</html>

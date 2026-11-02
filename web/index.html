@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Triage</title>
+  <meta name="description" content="Triage watches your email and tells you on Telegram only about what needs you. Small, private, and by approval.">
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#0D1117">
+  <link rel="stylesheet" href="brand-base.css">
+  <link rel="stylesheet" href="brand-triage.css">
+  <link rel="stylesheet" href="shell.css">
+  <style>
+    /* Page-only layout for a public explainer. Colours come from the pack tokens. */
+    .content { max-width: 860px; }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .lead { font-size: 15.5px; line-height: 1.6; margin: 0 0 4px; }
+    .prose { font-size: 14.5px; line-height: 1.65; }
+    .prose p { margin: 0 0 10px; }
+    .prose ul, .prose ol { margin: 0 0 10px; padding-left: 20px; }
+    .prose li { margin: 0 0 7px; }
+    .prose a:not(.btn) { color: var(--sh-accent-2); }
+    .tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    @media (max-width: 560px) { .tiles { grid-template-columns: 1fr; } }
+    .tile { border: 1px solid var(--sh-rule); background: var(--sh-surface-2); border-radius: var(--sh-radius); padding: 14px; }
+    .tile b { display: block; margin-bottom: 4px; font-size: 14.5px; }
+    .tile span { color: var(--sh-muted); font-size: 13.5px; line-height: 1.55; }
+    .honest { border-left: 3px solid var(--sh-accent); padding: 8px 0 8px 14px; color: var(--sh-muted); }
+    code { font-family: var(--sh-mono); font-size: 13px; background: var(--sh-surface-2); padding: 1px 5px; border-radius: 4px; }
+    .page-head { flex-wrap: wrap; }
+    .trust { margin: 0 0 18px; padding: 12px 16px; border: 1px solid var(--sh-rule); border-left: 3px solid var(--sh-accent); border-radius: var(--sh-radius); background: var(--sh-surface); font-size: 14px; line-height: 1.6; color: var(--sh-muted); }
+    .trust p { margin: 0 0 6px; }
+    .trust p:last-child { margin: 0; }
+    .trust b { color: var(--sh-fog); }
+  </style>
+</head>
+<body class="app-shell">
+
+  <header class="topbar">
+    <button class="collapse-btn" id="nav-collapse" data-shell-collapse aria-label="Toggle sidebar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="brand">
+      <span class="logo" aria-hidden="true">T</span>
+      <div class="wordmark" id="wordmark">Triage<span class="dot">.</span></div>
+    </div>
+    <div class="spacer"></div>
+    <button class="omni" id="omni" data-shell-open-palette aria-label="Search (Command K)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+      <span class="lbl">Search</span><kbd>&#8984;K</kbd>
+    </button>
+    <div class="acct" id="acct">
+      <button class="acct__btn" id="acct-btn" aria-haspopup="menu" aria-expanded="false">
+        <span class="avatar" id="avatar">T</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="acct__menu hidden" id="acct-menu">
+        <div class="acct__who"><span class="kicker">No account here</span><span class="who" id="who">Triage lives in Telegram</span></div>
+        <button class="acct__item" data-shell-theme>Toggle theme</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout" id="layout">
+    <aside class="sidebar">
+      <div class="nav-sec">Triage</div>
+      <nav class="sidebar-nav">
+        <a href="#top" class="is-on"><span class="lbl">Overview</span></a>
+        <a href="#what"><span class="lbl">What it does</span></a>
+        <a href="#join"><span class="lbl">How to join</span></a>
+        <a href="#privacy"><span class="lbl">Privacy</span></a>
+        <a href="#limits"><span class="lbl">Good to know</span></a>
+        <a href="/how"><span class="lbl">How it works</span></a>
+        <div class="nav-sec pushdown">More</div>
+        <a href="/guide"><span class="lbl">Guide</span></a>
+        <a href="/about"><span class="lbl">About</span></a>
+        <a href="/legal"><span class="lbl">Legal</span></a>
+      </nav>
+      <div class="sidebar-foot">/guide &middot; /about &middot; /legal</div>
+    </aside>
+
+    <main class="content" id="top">
+      <div class="page-head">
+        <div>
+          <span class="kicker">Triage</span>
+          <h1>Only the email that needs you.</h1>
+          <p class="lead">Give Triage access to your email inbox and allow it to manage junk and send you notifications on Telegram.</p>
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn--primary" href="https://t.me/HWEmailTriageBot?start=join">Ask to join</a>
+          <a class="btn btn--ghost" href="#join">How it works</a>
+        </div>
+      </div>
+
+      <div class="trust">
+        <p><b>Your mail stays yours.</b> It is encrypted under your own key, so Helen never sees it. Triage never keeps the body of an email, and you can leave at any time and take everything with you.</p>
+        <p><b>It starts by only telling you.</b> It touches nothing in your mailbox until you say so.</p>
+        <p>Helen built Triage for her own four inboxes, and now shares it with a few people she knows.</p>
+      </div>
+
+      <div class="sheet">
+        <section class="section" id="what">
+          <div class="section__head"><span class="section__n">01</span><span class="section__title">What it does</span></div>
+          <p class="section__desc">It sorts every new email into one of four piles, and only one of them interrupts you.</p>
+          <div class="tiles">
+            <div class="tile"><b>🔴 Needs you</b><span>A real person waiting on you, money that needs a decision, a security problem, a deadline. You hear straight away.</span></div>
+            <div class="tile"><b>📬 For information</b><span>Receipts, deliveries, confirmations. Gathered into a digest at 8am and 5pm, UK time.</span></div>
+            <div class="tile"><b>📰 Newsletters</b><span>Asked about once per sender: Unsubscribe or Keep. Unsubscribing is one tap.</span></div>
+            <div class="tile"><b>🗑 Junk</b><span>Spam and phishing are counted, never answered, and never clicked.</span></div>
+          </div>
+          <p class="prose" style="margin-top:14px">It starts in <b>watch</b> mode: it sorts and tells you, but never touches your mailbox unless you tap a button. Switch to <b>act</b> mode with <code>/mode act</code> and it also archives newsletters and junk as they arrive.</p>
+        </section>
+
+        <section class="section" id="join">
+          <div class="section__head"><span class="section__n">02</span><span class="section__title">How to join</span></div>
+          <p class="section__desc">About two minutes. You need Telegram and a Gmail or Google Workspace inbox.</p>
+          <div class="prose">
+            <ol>
+              <li><b>Tap Ask to join.</b> It opens the Triage bot in Telegram. Press <b>Start</b>.</li>
+              <li><b>Wait for a yes.</b> Helen approves each person herself. When she does, the bot says hello.</li>
+              <li><b>Connect your inbox.</b> Send <code>/connect Gmail</code> and sign in with Google. Google will warn that it "hasn't verified this app", because Triage is a small private tool rather than a public product. Tap <b>Advanced</b>, then <b>Go to triage.hw-tools.io</b>, then allow access.</li>
+              <li><b>That is it.</b> From then on, only what needs you arrives. <code>/status</code> shows what is connected and <code>/help</code> lists everything.</li>
+            </ol>
+            <p><a class="btn btn--primary" href="https://t.me/HWEmailTriageBot?start=join">Ask to join</a></p>
+          </div>
+        </section>
+
+        <section class="section" id="privacy">
+          <div class="section__head"><span class="section__n">03</span><span class="section__title">Your privacy</span></div>
+          <p class="section__desc">Your mail is yours. Helen runs Triage, and it is built so that she never sees it.</p>
+          <div class="prose">
+            <ul>
+              <li><b>It never stores the body of an email.</b> For 30 days it keeps who an email was from, the subject and a one-line summary, so the digest works. Then they are deleted.</li>
+              <li><b>All of that is encrypted under a key of your own</b> before it is stored, along with your inbox address and your sender choices. Browsing the database shows nothing readable, including to Helen.</li>
+              <li><b>Helen sees only that you joined</b>, your Telegram name when you ask, and how many inboxes you connected. Never which ones, and nothing about your mail.</li>
+              <li><b>Your email is sorted by Anthropic's Claude.</b> The text of each new email is sent to Anthropic for that alone. Anthropic does not train on it.</li>
+              <li><b>Alerts arrive in your own private Telegram chat</b> with the bot. Nobody else is in it. Like any Telegram chat, it is stored on Telegram's servers.</li>
+              <li><b>You can leave at any time.</b> Send <code>/leave</code> and every inbox is disconnected, Google's access is handed back and everything held for you is deleted. You can also withdraw access yourself at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</li>
+            </ul>
+            <p class="honest">In fairness: Helen owns the service, so your privacy rests on trust as well as on encryption. Someone who controls the code could change it. Triage is built so that she never sees your mail, and she has promised not to look.</p>
+            <p>Use of data received from Google APIs follows the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including its Limited Use requirements. Nothing is sold, shared or used for advertising. The full terms are on the <a href="/legal">Legal</a> page.</p>
+          </div>
+        </section>
+
+        <section class="section" id="limits">
+          <div class="section__head"><span class="section__n">04</span><span class="section__title">Good to know</span></div>
+          <div class="prose">
+            <ul>
+              <li><b>Gmail and Google Workspace only</b>, for now. Not iCloud or Outlook.</li>
+              <li><b>A work account may be blocked</b> by your organisation's own Google administrator. Personal Gmail always works.</li>
+              <li><b>It only looks at mail that arrives after you connect.</b> It never trawls your old email.</li>
+              <li><b>It is free</b> and small on purpose: a few people, each approved by Helen.</li>
+              <li><b>It never opens links from your email</b> or shows them as buttons, except the unsubscribe page of a sender you have just chosen to leave.</li>
+            </ul>
+            <p>Curious about the technical side? <a href="/how">How it works</a> explains the whole thing, and <a href="https://github.com/helenwebberley/triage-public">the code is public</a>.</p>
+            <p>Questions: <a href="mailto:hello@helenwebberley.com">hello@helenwebberley.com</a>.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="shell.js"></script>
+</body>
+</html>

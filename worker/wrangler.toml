@@ -1,0 +1,51 @@
+# triage: watches inboxes, tells each person on Telegram what needs them.
+#
+# Deploy:  npx wrangler deploy
+# Logs:    npx wrangler tail
+#
+# Secrets are never in this file. Set each with `npx wrangler secret put NAME`:
+#   ANTHROPIC_API_KEY, GOOGLE_CLIENT_SECRET, TELEGRAM_BOT_TOKEN,
+#   TELEGRAM_WEBHOOK_SECRET, TOKEN_KEY, PAIR_CODE, and ICLOUD_APP_PASSWORD if
+#   the owner reads an iCloud inbox.
+
+name = "triage"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+[triggers]
+crons = ["*/5 * * * *"]
+
+[vars]
+PUBLIC_URL = "https://triage.example.com"
+# From your Google Cloud OAuth client. An identifier, not a secret.
+GOOGLE_CLIENT_ID = "your-client-id.apps.googleusercontent.com"
+MODEL = "claude-haiku-5-5"
+EFFORT = "low"
+# Optional, owner only: forward travel bookings to a planner address, sent
+# from one of these connected Google inboxes. Leave empty to switch off.
+TRAVEL_TO = ""
+TRAVEL_FROM = ""
+# Optional, owner only: if you receive copies of someone else's mail, their
+# address. Those copies alert only when they are reminders or urgent.
+COPIES_OF = ""
+COPIES_LABEL = "A copy"
+DIGEST_HOURS = "8,17"
+MAX_PER_RUN = "25"
+ASKS_PER_DIGEST = "8"
+
+[assets]
+directory = "../web"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "triage"
+database_id = "your-d1-database-id"
+
+# Uncomment to serve on your own domain.
+# [[routes]]
+# pattern = "triage.example.com"
+# custom_domain = true

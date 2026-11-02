@@ -1,0 +1,97 @@
+/*
+ * brand-packs / tokens / base.css
+ *
+ * The shared layer. Every app loads this, then loads its own packs/<slug>.css
+ * on top. This file holds what UNITES the apps: the same token names, the same
+ * type scale, spacing, radii and shadows. The pack file only changes the colours
+ * and fonts. That is the "one family, distinct identities" idea in code.
+ *
+ * Usage in an app:
+ *   <link rel="stylesheet" href="base.css">
+ *   <link rel="stylesheet" href="norm.css">
+ * or copy both into the project and @import them.
+ *
+ * House style: UK English, no em dashes.
+ */
+
+/* The house typeface. Loaded HERE, once, so every app that links base.css
+ * actually renders Inter. Before this, packs declared `--font-sans: Inter` but
+ * nothing loaded the webfont, so Rally and MyChat silently fell back to the
+ * system font while Scribe loaded Satoshi: three tools, two different faces.
+ * One family, one face: add fonts here, never per app. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Colour slots. Packs override these. Defaults are a neutral grey so an app
+     renders sensibly even before a pack is applied. */
+  --brand-50: #f7f7f8;
+  --brand-100: #ececee;
+  --brand-200: #d5d6da;
+  --brand-300: #b1b4bb;
+  --brand-400: #868a95;
+  --brand-500: #6b6f7b;
+  --brand-600: #565962;
+  --brand-700: #474951;
+  --brand-800: #3d3e45;
+  --brand-900: #35363b;
+  --brand-950: #232327;
+
+  --accent: var(--brand-500);
+
+  --color-bg: #ffffff;
+  --color-surface: #f7f7f8;
+  --color-text: #1a1a1e;
+  --color-muted: #6b6f7b;
+  --color-border: color-mix(in srgb, var(--color-text) 12%, transparent);
+
+  /* Fonts. Packs override these. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-sans);
+
+  /* Type scale (1.2 minor third), shared across every app. */
+  --text-xs: 0.694rem;
+  --text-sm: 0.833rem;
+  --text-base: 1rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.44rem;
+  --text-2xl: 1.728rem;
+  --text-3xl: 2.074rem;
+  --text-4xl: 2.488rem;
+  --leading-tight: 1.15;
+  --leading-normal: 1.5;
+  --tracking-tight: -0.01em;
+
+  /* Spacing scale (4px base), shared. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+  --space-10: 4rem;
+
+  /* Radii, shared. The icon tile uses the same 22% family curve at its own scale. */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-pill: 999px;
+
+  /* Elevation, shared. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.16);
+
+  /* Touch target for iPad / iPhone PWAs. */
+  --tap-target: 44px;
+
+  /* Safe areas for installed PWAs. */
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+}
+
+/* A couple of shared conveniences apps can opt into. */
+.tap-target { min-height: var(--tap-target); }
+.safe-top { padding-top: var(--safe-top); }
+.safe-bottom { padding-bottom: var(--safe-bottom); }

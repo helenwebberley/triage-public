@@ -1,0 +1,292 @@
+/*
+ * brand-packs / shell.css: the house app shell
+ *
+ * The one dashboard shell every hw-tools tool wears: a slim top bar (identity +
+ * account), a collapsible left sidebar (primary nav), and a card content area.
+ * The Stripe / WordPress-admin pattern, in Scribe's dark-studio craft.
+ *
+ * Load order in an app shell:
+ *   <link rel="stylesheet" href="brand-base.css">     <!-- shared tokens -->
+ *   <link rel="stylesheet" href="brand-<slug>.css">   <!-- the tool's palette -->
+ *   <link rel="stylesheet" href="shell.css">          <!-- this file -->
+ *
+ * Colour comes entirely from the loaded pack (brand-base + brand-<slug>): this
+ * file only references tokens, never literal brand colours. One accent per tool
+ * is the ONLY saturated thing on screen; everything else is neutral. The markup
+ * to pair with this is documented in shell.skeleton.html.
+ *
+ * House style: UK English, no em dashes.
+ */
+
+:root {
+  /* Shell tokens, derived from the pack so the shell needs nothing brand-base
+     doesn't already give it. Prefixed --sh-* so they never collide with an
+     app's own token names. */
+  --sh-ink:        var(--color-bg, #0D0F14);
+  --sh-surface:    var(--color-surface, #14161D);
+  --sh-surface-2:  color-mix(in srgb, var(--color-surface, #14161D) 90%, var(--color-text, #F5F6F8));
+  --sh-surface-3:  color-mix(in srgb, var(--color-surface, #14161D) 82%, var(--color-text, #F5F6F8));
+  --sh-fog:        var(--color-text, #F5F6F8);
+  --sh-muted:      var(--color-muted, #A6AEBC);
+  --sh-faint:      color-mix(in srgb, var(--color-muted, #A6AEBC) 68%, var(--color-bg, #0D0F14));
+  --sh-rule:       color-mix(in srgb, var(--color-text, #F5F6F8) 13%, transparent);
+  --sh-rule-soft:  color-mix(in srgb, var(--color-text, #F5F6F8) 7%, transparent);
+
+  /* Single accent: solid fill from --brand-500, links/marks from the pack --accent. */
+  --sh-accent:      var(--brand-500, #6366F1);
+  --sh-accent-2:    var(--accent, var(--brand-400, #818CF8));
+  --sh-accent-soft: color-mix(in srgb, var(--brand-500, #6366F1) 16%, transparent);
+  --sh-on-accent:   #fff;
+
+  --sh-sans:   var(--font-sans, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
+  --sh-mono:   ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  --sh-radius: var(--radius-lg, 14px);
+  --sh-radius-sm: var(--radius-md, 9px);
+  --sh-shadow: var(--shadow-lg, 0 14px 34px rgba(0,0,0,.34));
+  --sh-sidebar: 252px;
+}
+
+/* ---------- frame ---------- */
+/* Self-contained: a tool needs ONLY <body class="app-shell"> + its pack. No
+   per-tool body/font/reset glue (that leftover glue is what made tools drift). */
+html, body { margin: 0; padding: 0; }
+/* The house glow: two soft radials over the ink, tinted by the tool's OWN accent.
+   Scribe wore this first (hard-coded indigo + teal on its body); promoting it here
+   means every tool gets the same treatment in its own colour, which is the whole
+   idea: one family, distinct identities. */
+.app-shell { min-height: 100vh; display: grid; grid-template-rows: auto 1fr;
+  background:
+    radial-gradient(900px 500px at 12% -8%, color-mix(in srgb, var(--sh-accent) 13%, transparent), transparent 60%),
+    radial-gradient(800px 480px at 100% 0%, color-mix(in srgb, var(--sh-accent-2) 9%, transparent), transparent 55%),
+    var(--sh-ink);
+  color: var(--sh-fog); font-family: var(--sh-sans);
+  font-size: 15px; line-height: 1.5; }
+.app-shell h1, .app-shell h2, .app-shell h3, .app-shell h4,
+.app-shell p, .app-shell ul, .app-shell ol { margin: 0; }
+.app-shell *, .app-shell *::before, .app-shell *::after { box-sizing: border-box; }
+
+/* The shell's own markup ships .hidden (the account menu starts closed; SPAs also
+   gate the top bar on sign-in), so the shell MUST provide it. It did not: Rally and
+   Scribe each defined it privately in their style.css and looked fine, while MyChat
+   has no bespoke stylesheet and so wore its account menu hanging open, permanently.
+   A utility the shell's markup depends on belongs in the shell. */
+.hidden { display: none !important; }
+
+.kicker { font-family: var(--sh-mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--sh-faint); }
+
+/* ---------- top bar: identity + account only ---------- */
+.topbar { display: flex; align-items: center; gap: 12px; height: 60px; padding: 0 18px;
+  background: color-mix(in srgb, var(--sh-surface) 84%, transparent); backdrop-filter: blur(9px);
+  border-bottom: 1px solid var(--sh-rule); position: sticky; top: 0; z-index: 20; }
+.topbar .spacer { flex: 1; }
+.brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.logo { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; flex: none;
+  font-weight: 800; font-size: 17px; color: var(--sh-on-accent); letter-spacing: -.03em;
+  background: linear-gradient(135deg, var(--sh-accent), color-mix(in srgb, var(--sh-accent) 60%, #000 10%));
+  box-shadow: 0 5px 16px color-mix(in srgb, var(--sh-accent) 40%, transparent); }
+.wordmark { font-weight: 800; font-size: 19px; letter-spacing: -.02em; color: var(--sh-fog); }
+.wordmark .dot { color: var(--sh-accent-2); }
+.topbar .kicker { margin-top: 1px; }
+.topbar .who { font-size: 13px; color: var(--sh-muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) { .topbar .who { display: none; } }
+
+/* account menu (top-right): avatar button -> dropdown. The standard pattern,
+   replacing a bare email + sign-out button. */
+.acct { position: relative; }
+.acct__btn { display: flex; align-items: center; gap: 7px; background: none; border: 0; cursor: pointer;
+  padding: 4px 8px 4px 5px; border-radius: 999px; color: var(--sh-muted); }
+.acct__btn:hover { background: var(--sh-surface-2); }
+.avatar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  font-weight: 700; font-size: 13px; color: var(--sh-on-accent);
+  background: linear-gradient(135deg, var(--sh-accent), color-mix(in srgb, var(--sh-accent) 60%, #000 10%)); }
+.acct__menu { position: absolute; top: 46px; right: 0; min-width: 214px; background: var(--sh-surface);
+  border: 1px solid var(--sh-rule); border-radius: 12px; box-shadow: var(--sh-shadow); padding: 6px; z-index: 40; }
+.acct__who { padding: 9px 11px 8px; border-bottom: 1px solid var(--sh-rule-soft); margin-bottom: 5px; }
+.acct__who .who { display: block; font-size: 13px; color: var(--sh-fog); margin-top: 3px; }
+.acct__item { display: block; width: 100%; text-align: left; background: none; border: 0; cursor: pointer;
+  padding: 9px 11px; border-radius: 8px; color: var(--sh-muted); font: inherit; font-size: 14px; }
+.acct__item:hover { background: var(--sh-surface-2); color: var(--sh-fog); }
+
+.collapse-btn, .icon-btn { width: 34px; height: 34px; border-radius: 8px; flex: none;
+  border: 1px solid var(--sh-rule); background: var(--sh-surface-2); color: var(--sh-muted);
+  display: grid; place-items: center; cursor: pointer; }
+.collapse-btn:hover, .icon-btn:hover { color: var(--sh-fog); border-color: var(--sh-accent); }
+
+/* ---------- layout: sidebar + content ---------- */
+.layout { display: grid; grid-template-columns: var(--sh-sidebar) minmax(0, 1fr); min-height: 0; }
+.layout.nav-collapsed { --sh-sidebar: 66px; }
+
+.sidebar { border-right: 1px solid var(--sh-rule); background: var(--sh-surface);
+  padding: 14px 12px; display: flex; flex-direction: column; gap: 3px; overflow-y: auto; }
+.nav-sec { font-family: var(--sh-mono); font-size: 9.5px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--sh-faint); padding: 10px 10px 5px; }
+.layout.nav-collapsed .nav-sec { opacity: 0; height: 6px; padding: 0; }
+
+/* nav items: work as <a> or <button> so an SPA can reuse its existing controls */
+.sidebar-nav { display: flex; flex-direction: column; gap: 3px; }
+.sidebar-nav a, .sidebar-nav button { display: flex; align-items: center; gap: 11px; width: 100%;
+  padding: 9px 10px; border-radius: 9px; color: var(--sh-muted); text-decoration: none; cursor: pointer;
+  font-family: inherit; font-size: 14px; font-weight: 500; text-align: left; background: none; border: 0;
+  position: relative; }
+.sidebar-nav svg { flex: none; width: 18px; height: 18px; stroke: currentColor; }
+.sidebar-nav .lbl { white-space: nowrap; overflow: hidden; }
+.layout.nav-collapsed .sidebar-nav a, .layout.nav-collapsed .sidebar-nav button { justify-content: center; padding: 9px; }
+.layout.nav-collapsed .sidebar-nav .lbl { display: none; }
+.sidebar-nav a:hover, .sidebar-nav button:hover { color: var(--sh-fog); background: var(--sh-surface-2); }
+.sidebar-nav a.is-on, .sidebar-nav button.is-on { color: var(--sh-fog); background: var(--sh-accent-soft); }
+.sidebar-nav a.is-on::before, .sidebar-nav button.is-on::before { content: ""; position: absolute;
+  left: -12px; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0; background: var(--sh-accent); }
+.sidebar-nav .badge { margin-left: auto; font-family: var(--sh-mono); font-size: 10px; font-weight: 700;
+  background: var(--sh-accent); color: var(--sh-on-accent); border-radius: 8px; padding: 1px 6px; }
+.layout.nav-collapsed .sidebar-nav .badge { display: none; }
+.sidebar .pushdown { margin-top: auto; }
+.sidebar-foot { padding: 10px; font-family: var(--sh-mono); font-size: 10px; color: var(--sh-faint); letter-spacing: .04em; }
+.layout.nav-collapsed .sidebar-foot { display: none; }
+
+.content { overflow-y: auto; padding: 26px clamp(18px, 4vw, 40px) 64px; }
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+  margin-bottom: 22px; flex-wrap: wrap; }
+.page-head h1 { font-size: 24px; margin: 0; letter-spacing: -.02em; }
+.page-head p { margin: 5px 0 0; color: var(--sh-muted); font-size: 14px; }
+
+/* ---------- notice banner ---------- */
+.notice { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-radius: 11px;
+  margin-bottom: 20px; font-size: 13.5px; color: var(--sh-fog);
+  background: color-mix(in srgb, var(--sh-accent) 8%, var(--sh-surface));
+  border: 1px solid color-mix(in srgb, var(--sh-accent) 30%, var(--sh-rule)); }
+.notice__x { margin-left: auto; background: none; border: 0; color: var(--sh-muted); cursor: pointer; font-size: 16px; line-height: 1; }
+
+/* ---------- cards + sections ---------- */
+.sheet { background: var(--sh-surface); border: 1px solid var(--sh-rule); border-radius: var(--sh-radius);
+  box-shadow: var(--sh-shadow); overflow: hidden; }
+.brandbar { display: flex; align-items: center; gap: 11px; flex-wrap: wrap; padding: 15px 20px;
+  border-bottom: 1px solid var(--sh-rule-soft); background: var(--sh-surface-2); }
+.section { padding: 22px 20px; border-bottom: 1px solid var(--sh-rule-soft); }
+.section:last-child { border-bottom: 0; }
+.section__head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.section__n { font-family: var(--sh-mono); font-size: 12px; font-weight: 700; color: var(--sh-accent-2); }
+.section__title { font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+.section__desc { color: var(--sh-muted); font-size: 13.5px; margin: 0 0 14px; }
+
+/* ---------- fields ---------- */
+.field { display: block; margin-bottom: 14px; }
+.lab { display: block; font-size: 12.5px; color: var(--sh-muted); margin-bottom: 7px; font-weight: 600; }
+.lab .opt { color: var(--sh-faint); font-weight: 400; text-transform: none; letter-spacing: 0; }
+/* Every text-like input, listed by EXCLUSION rather than by name. The old list
+   named text and email only, so number, date, search, tel and the rest fell
+   through to the browser default: a small WHITE box in the middle of a dark
+   tool. Found on Transition, where a protocol asks for an age and a blood
+   result and both came out white. Excluding the types that must keep their
+   native control is the only list that will not need editing again the next
+   time a tool reaches for an input type nobody has used yet. */
+.shell-input,
+.app-shell input:not([type]),
+.app-shell input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]):not([type=color]):not([type=submit]):not([type=button]):not([type=reset]),
+.app-shell textarea, .app-shell select {
+  width: 100%; font-family: inherit; font-size: 14px; color: var(--sh-fog);
+  background: var(--sh-ink); border: 1px solid var(--sh-rule); border-radius: 10px; padding: 11px 13px; }
+.app-shell textarea { resize: vertical; min-height: 88px; }
+.app-shell input:focus, .app-shell textarea:focus, .app-shell select:focus {
+  outline: none; border-color: var(--sh-accent); box-shadow: 0 0 0 3px var(--sh-accent-soft); }
+
+/* A checkbox keeps its native control but not its native colour: left alone it
+   renders as a light-mode tick on a dark sheet. */
+.app-shell input[type=checkbox], .app-shell input[type=radio] {
+  accent-color: var(--sh-accent); width: 16px; height: 16px; }
+
+/* The spinner on a number field is a light-mode control that cannot be themed,
+   so it goes. These values are typed, never nudged. */
+.app-shell input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+.app-shell input[type=number]::-webkit-outer-spin-button,
+.app-shell input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* ---------- chips ---------- */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { border: 1px solid var(--sh-rule); background: var(--sh-surface-2); color: var(--sh-muted);
+  border-radius: 999px; padding: 7px 15px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.chip:hover { color: var(--sh-fog); border-color: var(--sh-accent); }
+.chip.is-on { background: var(--sh-accent); color: var(--sh-on-accent); border-color: transparent; }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; gap: 7px; font-family: inherit; font-weight: 600;
+  font-size: 13.5px; padding: 9px 15px; border-radius: 9px; border: 1px solid transparent;
+  cursor: pointer; text-decoration: none; white-space: nowrap; }
+.btn--primary { background: var(--sh-accent); color: var(--sh-on-accent); }
+.btn--primary:hover { filter: brightness(1.07); }
+.btn--primary:disabled { background: var(--sh-surface-3); color: var(--sh-faint); cursor: default; filter: none; }
+.btn--ghost { background: transparent; border-color: var(--sh-rule); color: var(--sh-muted); }
+.btn--ghost:hover { color: var(--sh-fog); border-color: var(--sh-accent); background: var(--sh-surface-2); }
+.btn--xs, .btn--sm { padding: 6px 11px; font-size: 12.5px; }
+
+/* ---------- sign-in (full screen; the shared /sign-in) ---------- */
+.signin { min-height: 100vh; display: grid; place-items: center; padding: 40px 18px; color: var(--sh-fog);
+  background: radial-gradient(700px 380px at 50% -6%, var(--sh-accent-soft), transparent 62%), var(--sh-ink); }
+.signin__card { width: 100%; max-width: 360px; text-align: center; }
+.signin__card .logo { margin: 0 auto 18px; width: 50px; height: 50px; border-radius: 13px; font-size: 24px; }
+.signin h1 { font-size: 22px; margin: 0 0 6px; }
+.signin__sub { color: var(--sh-muted); font-size: 14px; margin: 0 0 24px; }
+.signin .field { text-align: left; }
+.signin input.code { text-align: center; letter-spacing: .35em; font-size: 18px; }
+.signin .btn--primary { width: 100%; justify-content: center; margin-top: 14px; padding: 12px; }
+.signin .hint { color: var(--sh-faint); font-size: 12.5px; margin: 12px 0 0; }
+.signin .links { display: flex; justify-content: space-between; margin-top: 14px; }
+.signin .links button { background: none; border: 0; color: var(--sh-muted); cursor: pointer; font-size: 12.5px; }
+.signin .links button:hover { color: var(--sh-accent-2); }
+
+/* ---------- top-bar search pill (opens the palette) ---------- */
+.omni { display: flex; align-items: center; gap: 8px; min-width: 200px; cursor: pointer;
+  background: var(--sh-surface-2); border: 1px solid var(--sh-rule); color: var(--sh-faint);
+  border-radius: 10px; padding: 7px 10px; font-family: inherit; font-size: 13px; }
+.omni:hover { border-color: var(--sh-accent); color: var(--sh-muted); }
+.omni svg { width: 15px; height: 15px; flex: none; stroke: currentColor; }
+.omni kbd { margin-left: auto; font-family: var(--sh-mono); font-size: 11px; color: var(--sh-muted);
+  background: var(--sh-surface); border: 1px solid var(--sh-rule); border-radius: 5px; padding: 1px 6px; }
+@media (max-width: 640px) { .omni .lbl, .omni kbd { display: none; } .omni { min-width: 0; } }
+/* The palette is a keyboard tool; on a phone its button only pushes the top bar wider than the screen. */
+@media (max-width: 480px) { .omni { display: none; } }
+
+/* ---------- command palette (Cmd-K) ---------- */
+.cmdk { position: fixed; inset: 0; z-index: 100; display: grid; place-items: start center; padding-top: 14vh; }
+.cmdk.hidden { display: none; }
+.cmdk__backdrop { position: fixed; inset: 0; background: rgba(5, 6, 10, .6); backdrop-filter: blur(3px); }
+.cmdk__panel { position: relative; width: 100%; max-width: 560px; background: var(--sh-surface);
+  border: 1px solid var(--sh-rule); border-radius: 14px; box-shadow: var(--sh-shadow); overflow: hidden; }
+.cmdk__input { width: 100%; border: 0; background: transparent; color: var(--sh-fog);
+  font-family: inherit; font-size: 16px; padding: 16px 18px; border-bottom: 1px solid var(--sh-rule-soft); }
+.cmdk__input:focus { outline: none; }
+.cmdk__list { list-style: none; margin: 0; padding: 6px; max-height: 44vh; overflow-y: auto; }
+.cmdk__item { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px; border-radius: 9px; cursor: pointer; color: var(--sh-muted); font-size: 14px; }
+.cmdk__item.is-sel { background: var(--sh-accent-soft); color: var(--sh-fog); }
+.cmdk__hint { font-family: var(--sh-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--sh-faint); }
+.cmdk__empty { padding: 16px; text-align: center; color: var(--sh-faint); font-size: 14px; }
+.cmdk__foot { display: flex; gap: 16px; padding: 9px 16px; border-top: 1px solid var(--sh-rule-soft);
+  font-family: var(--sh-mono); font-size: 10.5px; color: var(--sh-faint); }
+
+/* collapsed rail: tooltip is the native title set by shell.js */
+
+/* ---------- responsive ---------- */
+/* Phones: the sidebar becomes a drawer behind the top-left menu button, so the
+   page gets the whole width. shell.js opens it (.nav-open) and closes it when a
+   page is picked or the dimmed page is tapped. */
+@media (max-width: 760px) {
+  .layout, .layout.nav-collapsed { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { position: fixed; top: 60px; left: 0; bottom: 0; z-index: 50; width: min(280px, 84vw);
+    padding: 14px 12px; transform: translateX(-102%); visibility: hidden;
+    box-shadow: var(--sh-shadow); }
+  .layout.nav-open .sidebar { transform: none; visibility: visible; }
+  .layout.nav-open::after { content: ""; position: fixed; inset: 60px 0 0 0; z-index: 49; background: rgba(0, 0, 0, .4); }
+  /* A full menu again, not a rail: labels and section names show. */
+  .layout .sidebar-nav .lbl, .layout.nav-collapsed .sidebar-nav .lbl { display: inline; }
+  .layout .nav-sec, .layout.nav-collapsed .nav-sec { display: block; opacity: 1; height: auto; padding: 10px 10px 5px; }
+  .layout .sidebar-nav a, .layout .sidebar-nav button,
+  .layout.nav-collapsed .sidebar-nav a, .layout.nav-collapsed .sidebar-nav button { justify-content: flex-start; padding: 10px 12px; }
+  .layout .sidebar-foot, .layout.nav-collapsed .sidebar-foot { display: block; }
+}
+@media (max-width: 760px) and (prefers-reduced-motion: no-preference) {
+  .sidebar { transition: transform .2s ease, visibility .2s; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar-nav a, .sidebar-nav button, .chip, .btn, .collapse-btn, .icon-btn { transition: background .15s, color .15s, border-color .15s, filter .15s; }
+}

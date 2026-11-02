@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- synced from brand-packs/content; do not edit here -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About | Triage</title>
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0D1117">
+<link rel="stylesheet" href="brand-base.css">
+<link rel="stylesheet" href="brand-triage.css">
+<style>body { background: var(--color-bg); margin: 0; }</style>
+</head>
+<body>
+<!--
+  Canonical About page for the app family. Token-themed (brand-pack CSS variables),
+  config-driven. Copy into an app, load its brand-pack tokens, and edit the CONFIG.
+  Replace the placeholder body copy with the real story. UK English, no em dashes.
+-->
+<style>
+  .about { max-width: 42rem; margin: 0 auto; padding: 3rem 1.25rem 4rem;
+    color: var(--color-text, #1a1a1e);
+    font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif);
+    line-height: 1.6; }
+  .about h1 { font-family: var(--font-display, inherit); font-size: 2.25rem; margin: 0 0 .75rem; line-height: 1.1; }
+  .about .lead { font-size: 1.15rem; color: var(--color-text, #1a1a1e); }
+  .about h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+  .about a { color: var(--brand-500, #3a6ea5); }
+</style>
+
+<!-- A way home. A tool added to a phone's home screen has no browser Back button,
+     so without this link these pages are a dead end. -->
+<p class="page-back" style="max-width:42rem;margin:1.25rem auto 0;padding:0 1.25rem;font-family:var(--font-sans,system-ui,sans-serif);font-size:.95rem"><a href="/" style="color:var(--brand-500,#3a6ea5);text-decoration:none">&larr; Back to the app</a></p>
+<article class="about">
+  <h1>About {{NAME}}</h1>
+  <p class="lead">{{TAGLINE}}</p>
+
+  <p>{{DESCRIPTION}}</p>
+
+  <h2>What we do</h2>
+  <p>Replace this with a plain-English explanation of what the app does, who it is for, and why it exists. Keep it warm and direct.</p>
+
+  <h2>Who is behind it</h2>
+  <p>{{NAME}} is run by {{OPERATOR}}. Say a little about the people or team here, and what you care about.</p>
+
+  <h2>Get in touch</h2>
+  <p>Questions, ideas, or feedback are welcome. Email us at <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a>.</p>
+</article>
+
+<script>
+// operator matches legal.html's controller. Replace name, tagline and description
+// per app; the body copy above is placeholder and is meant to be rewritten, not
+// shipped as it stands.
+const ABOUT = {
+  name: "Triage",
+  tagline: "Only the email that needs you.",
+  description: "Most email does not need you. Triage reads your inbox as mail arrives, has Claude sort each one, and messages you on Telegram only about what genuinely needs you: a person waiting on you, money that needs a decision, a security problem, a deadline. The rest waits for a short digest, and newsletters go with one tap. Helen built it for her own four inboxes and now shares it with a few people she approves, with each person's mail encrypted under a key of their own so that she never sees it.",
+  operator: "Dr Helen Webberley",
+  contactEmail: "hello@helenwebberley.com",
+}
+;(function () {
+  const t = { NAME: ABOUT.name, TAGLINE: ABOUT.tagline, DESCRIPTION: ABOUT.description, OPERATOR: ABOUT.operator, CONTACT_EMAIL: ABOUT.contactEmail }
+  const root = document.querySelector(".about")
+  root.innerHTML = root.innerHTML.replace(/\{\{(\w+)\}\}/g, (m, k) => k in t ? t[k] : m)
+})()
+</script>
+
+</body>
+</html>

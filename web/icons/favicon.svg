@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="triageg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fca5a5"/>
+      <stop offset="0.5" stop-color="#f05050"/>
+      <stop offset="1" stop-color="#b91c1c"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="224" fill="#0D1117"/>
+  <!-- an envelope with one alert dot: the one email that needs you. Drawn as
+       paths, centred in the maskable safe zone, solid enough to read at 16px. -->
+  <g fill="none" stroke="url(#triageg)" stroke-linecap="round" stroke-linejoin="round" stroke-width="56">
+    <rect x="236" y="340" width="480" height="360" rx="48"/>
+    <path d="M260 372 L476 540 L692 372"/>
+  </g>
+  <circle cx="726" cy="330" r="96" fill="#F05050" stroke="#0D1117" stroke-width="40"/>
+</svg>

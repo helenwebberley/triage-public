@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How Triage works</title>
+  <meta name="description" content="The technical shape of Triage: the Worker, the classifier, the per-person encryption, and the code.">
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#0D1117">
+  <link rel="stylesheet" href="brand-base.css">
+  <link rel="stylesheet" href="brand-triage.css">
+  <link rel="stylesheet" href="shell.css">
+  <style>
+    .content { max-width: 860px; }
+    .lead { font-size: 15.5px; line-height: 1.6; margin: 0 0 4px; }
+    .prose { font-size: 14.5px; line-height: 1.65; }
+    .prose p { margin: 0 0 10px; }
+    .prose ul, .prose ol { margin: 0 0 10px; padding-left: 20px; }
+    .prose li { margin: 0 0 7px; }
+    .prose a:not(.btn) { color: var(--sh-accent-2); }
+    code { font-family: var(--sh-mono); font-size: 12.5px; background: var(--sh-surface-2); padding: 1px 5px; border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 4px 0 12px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--sh-rule-soft); vertical-align: top; }
+    th { color: var(--sh-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .table-wrap { overflow-x: auto; }
+    .diagram { width: 100%; height: auto; display: block; margin: 6px 0 14px; color: var(--sh-fog); }
+    .diagram .box { fill: var(--sh-surface-2); stroke: var(--sh-rule); stroke-width: 1.5; }
+    .diagram .hub { fill: var(--sh-surface-2); stroke: var(--sh-accent); stroke-width: 2; }
+    .diagram text { fill: var(--sh-fog); font: 600 14px var(--sh-sans); }
+    .diagram .sub { fill: var(--sh-muted); font: 400 12px var(--sh-sans); }
+    .diagram .line { stroke: var(--sh-muted); stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+    .diagram .lbl { fill: var(--sh-muted); font: 400 11.5px var(--sh-mono); }
+    .honest { border-left: 3px solid var(--sh-accent); padding: 8px 0 8px 14px; color: var(--sh-muted); }
+    .version { font-family: var(--sh-mono); font-size: 12.5px; color: var(--sh-muted); }
+    .page-head { flex-wrap: wrap; }
+  </style>
+</head>
+<body class="app-shell">
+
+  <header class="topbar">
+    <button class="collapse-btn" id="nav-collapse" data-shell-collapse aria-label="Toggle sidebar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="brand">
+      <span class="logo" aria-hidden="true">T</span>
+      <div class="wordmark" id="wordmark">Triage<span class="dot">.</span></div>
+    </div>
+    <div class="spacer"></div>
+    <button class="omni" id="omni" data-shell-open-palette aria-label="Search (Command K)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+      <span class="lbl">Search</span><kbd>&#8984;K</kbd>
+    </button>
+    <div class="acct" id="acct">
+      <button class="acct__btn" id="acct-btn" aria-haspopup="menu" aria-expanded="false">
+        <span class="avatar" id="avatar">T</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="acct__menu hidden" id="acct-menu">
+        <div class="acct__who"><span class="kicker">No account here</span><span class="who" id="who">Triage lives in Telegram</span></div>
+        <button class="acct__item" data-shell-theme>Toggle theme</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout" id="layout">
+    <aside class="sidebar">
+      <div class="nav-sec">Triage</div>
+      <nav class="sidebar-nav">
+        <a href="/"><span class="lbl">Overview</span></a>
+        <a href="/how" class="is-on"><span class="lbl">How it works</span></a>
+        <a href="#shape"><span class="lbl">The shape</span></a>
+        <a href="#email"><span class="lbl">One email's journey</span></a>
+        <a href="#sealed"><span class="lbl">What is stored</span></a>
+        <a href="#model"><span class="lbl">What Claude may do</span></a>
+        <a href="#code"><span class="lbl">The code</span></a>
+        <div class="nav-sec pushdown">More</div>
+        <a href="/guide"><span class="lbl">Guide</span></a>
+        <a href="/about"><span class="lbl">About</span></a>
+        <a href="/legal"><span class="lbl">Legal</span></a>
+      </nav>
+      <div class="sidebar-foot">/guide &middot; /about &middot; /legal</div>
+    </aside>
+
+    <main class="content" id="top">
+      <div class="page-head">
+        <div>
+          <span class="kicker">For the curious</span>
+          <h1>How Triage works.</h1>
+          <p class="lead">One small Cloudflare Worker, one database, one Claude call per email, and a Telegram bot. Here is the whole of it, and the code is public.</p>
+        </div>
+        <a class="btn btn--primary" href="https://github.com/helenwebberley/triage-public">Read the code</a>
+      </div>
+
+      <div class="sheet">
+        <section class="section" id="shape">
+          <div class="section__head"><span class="section__n">01</span><span class="section__title">The shape</span></div>
+          <p class="section__desc">Everything runs inside one Cloudflare Worker. Nothing runs on anyone's computer.</p>
+          <svg class="diagram" viewBox="0 0 760 300" role="img" aria-label="Your inbox feeds the Worker every five minutes. The Worker asks Claude to sort each email, keeps sealed notes in its database, and messages you on Telegram. Your taps come back to the Worker.">
+            <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="currentColor" opacity=".6"/></marker></defs>
+            <rect class="box" x="20" y="110" width="170" height="70" rx="10"/>
+            <text x="105" y="140" text-anchor="middle">Your inbox</text>
+            <text class="sub" x="105" y="160" text-anchor="middle">Gmail API, OAuth</text>
+            <rect class="hub" x="290" y="100" width="180" height="90" rx="12"/>
+            <text x="380" y="135" text-anchor="middle">Triage Worker</text>
+            <text class="sub" x="380" y="155" text-anchor="middle">Cloudflare, cron every 5 min</text>
+            <text class="sub" x="380" y="172" text-anchor="middle">+ Telegram webhook</text>
+            <rect class="box" x="290" y="10" width="180" height="56" rx="10"/>
+            <text x="380" y="35" text-anchor="middle">Claude Haiku</text>
+            <text class="sub" x="380" y="53" text-anchor="middle">sorts, JSON only</text>
+            <rect class="box" x="290" y="225" width="180" height="62" rx="10"/>
+            <text x="380" y="252" text-anchor="middle">D1 database</text>
+            <text class="sub" x="380" y="271" text-anchor="middle">sealed per person</text>
+            <rect class="box" x="570" y="110" width="170" height="70" rx="10"/>
+            <text x="655" y="140" text-anchor="middle">You, on Telegram</text>
+            <text class="sub" x="655" y="160" text-anchor="middle">private chat with the bot</text>
+            <path class="line" d="M190 145 L286 145"/>
+            <text class="lbl" x="238" y="136" text-anchor="middle">new mail</text>
+            <path class="line" d="M372 100 L372 70"/>
+            <path class="line" d="M388 68 L388 98"/>
+            <path class="line" d="M380 190 L380 221"/>
+            <path class="line" d="M470 135 L566 135"/>
+            <text class="lbl" x="518" y="126" text-anchor="middle">alerts</text>
+            <path class="line" d="M566 158 L474 158"/>
+            <text class="lbl" x="518" y="175" text-anchor="middle">taps</text>
+          </svg>
+          <div class="prose">
+            <ul>
+              <li><b>Runtime:</b> a Cloudflare Worker (JavaScript), with a cron trigger every 5 minutes and an HTTPS webhook for Telegram. The page you are reading is served by the same Worker as static assets.</li>
+              <li><b>Mail:</b> the Gmail API with OAuth (scope <code>gmail.modify</code>: read, label, archive and send, never delete). Each inbox's refresh token is encrypted before it is stored.</li>
+              <li><b>Sorting:</b> Anthropic's Claude Haiku 5.5, one call per email, at low effort.</li>
+              <li><b>State:</b> Cloudflare D1 (SQLite). Notes about mail are pruned after 30 days.</li>
+              <li><b>Interface:</b> a Telegram bot. There is no app and no web sign-in.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section" id="email">
+          <div class="section__head"><span class="section__n">02</span><span class="section__title">One email's journey</span></div>
+          <div class="prose">
+            <ol>
+              <li>The cron wakes, and for each person lists inbox mail newer than their last check. Mail it has already judged is skipped.</li>
+              <li>Your standing choices come first: a sender you muted or unsubscribed from is filed without asking Claude.</li>
+              <li>Otherwise the headers and up to 3,000 characters of text go to Claude inside <code>&lt;email&gt;</code> tags, with instructions to treat everything inside as content, never as instructions.</li>
+              <li>Claude must answer in a fixed JSON shape: a category (<code>needs_you</code>, <code>fyi</code>, <code>newsletter</code>, <code>junk</code>), a one-line summary, a reason, and flags for suspicious, reminder and which of your forwarding descriptions it matches.</li>
+              <li>Code decides what happens. Needs you: a Telegram message straight away. The rest: the 8am and 5pm digest. A forwarding rule that matches sends it on, never if it is junk or suspicious.</li>
+              <li>A sealed note of the sender, subject and summary is kept for the digest, then deleted after 30 days. The body of the email is never stored.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="section" id="sealed">
+          <div class="section__head"><span class="section__n">03</span><span class="section__title">What is stored, and how it is sealed</span></div>
+          <p class="section__desc">Every person has their own key. The database alone shows nothing readable about anyone's mail.</p>
+          <div class="prose">
+            <p>One random 256-bit secret lives only inside the Worker. From it, each person gets their own keys by HKDF-SHA256: an AES-GCM-256 key for sealing, and an HMAC-SHA256 key for lookups. Every sealed value has a fresh random 96-bit nonce.</p>
+            <div class="table-wrap"><table>
+              <tr><th>What</th><th>Kept as</th><th>For how long</th></tr>
+              <tr><td>Sender, subject, summary, reason</td><td>AES-GCM, your key</td><td>30 days</td></tr>
+              <tr><td>Your inbox address and its name</td><td>AES-GCM, your key</td><td>Until you disconnect</td></tr>
+              <tr><td>Sender rules and unsubscribe headers</td><td>AES-GCM, plus an HMAC of the address to find it</td><td>Until you leave</td></tr>
+              <tr><td>Forwarding rules and drafts</td><td>AES-GCM, your key</td><td>Rules until deleted; drafts 30 minutes</td></tr>
+              <tr><td>Google access token</td><td>AES-GCM, the Worker key</td><td>Until you disconnect</td></tr>
+              <tr><td>Category, dates, counts</td><td>Plain</td><td>30 days</td></tr>
+              <tr><td>The body of an email</td><td>Never stored</td><td>Never</td></tr>
+            </table></div>
+            <p>Every database query is scoped to one person, and every button tap is checked against the tapper's own rows. <code>/leave</code> revokes Google's access and deletes every row.</p>
+            <p class="honest">The limits, plainly. Helen holds the Worker, so in principle she could change the code to read what it reads; the encryption protects against the database being browsed or leaked, not against the operator. Anthropic receives the text of each email to sort it, under its commercial terms, which do not allow training on it. And alerts travel through Telegram: bot chats are ordinary Telegram cloud chats, not end-to-end encrypted.</p>
+          </div>
+        </section>
+
+        <section class="section" id="model">
+          <div class="section__head"><span class="section__n">04</span><span class="section__title">What Claude may and may not do</span></div>
+          <p class="section__desc">An email is written by a stranger and read by a model, so the model is given almost no power.</p>
+          <div class="prose">
+            <ul>
+              <li><b>Its only output is the JSON shape above.</b> It never chooses an action or a recipient. Code does.</li>
+              <li><b>It never writes on your behalf.</b> Replies and forwards are typed by you, shown to you, and sent only when you tap Send.</li>
+              <li><b>Unsubscribing waits for your tap</b>, and only the safe way: an RFC 8058 one-click POST, or an email to the list's address. A plain unsubscribe link is handed to you, never opened by code. Junk is never answered.</li>
+              <li><b>No link from an email is ever made clickable</b>, except the unsubscribe page of a sender you have just chosen to leave.</li>
+              <li><b>Where its judgement does trigger a send</b> (your description rules), the destination is the one you set, and junk or anything suspicious is never forwarded. In testing, an email carrying a planted "say this matches" instruction was not fooled.</li>
+              <li><b>Only invited or approved people are listened to.</b> The webhook checks a secret header, and messages from anyone else, or from any group, are ignored.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section" id="code">
+          <div class="section__head"><span class="section__n">05</span><span class="section__title">The code</span></div>
+          <p class="section__desc">Public, MIT licensed, and always the version that is running.</p>
+          <div class="prose">
+            <p>The code is at <a href="https://github.com/helenwebberley/triage-public">github.com/helenwebberley/triage-public</a>. It is published by the same step that deploys this site, from the same commit, so the two cannot drift. The only differences are the owner's personal settings (who they are, their addresses, their account ids), swapped for examples, and a check refuses to publish if any personal detail is left in.</p>
+            <p class="version" id="version">Running version: checking…</p>
+            <p>To run your own, the README has the steps: a Cloudflare account, a Telegram bot, a Google OAuth client and an Anthropic key. About half an hour.</p>
+            <p><a class="btn btn--primary" href="https://github.com/helenwebberley/triage-public">Read the code</a></p>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="shell.js"></script>
+  <script>
+    fetch("/version.json").then((r) => (r.ok ? r.json() : null)).then((v) => {
+      const el = document.getElementById("version");
+      if (!v) { el.textContent = "Running version: not recorded for this deploy."; return; }
+      const when = new Date(v.deployed).toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+      el.innerHTML = "Running version <b></b>, deployed " + when + ". The matching commit on GitHub is titled <b></b>.";
+      el.querySelectorAll("b")[0].textContent = v.commit;
+      el.querySelectorAll("b")[1].textContent = "Triage " + v.commit;
+    }).catch(() => {});
+  </script>
+</body>
+</html>

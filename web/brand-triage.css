@@ -1,0 +1,49 @@
+/* Triage pack. Generated from packs.json by tokens/generate.mjs. Do not edit by hand. */
+/* The inbox watcher. Dark studio, kin to Intel and Rally; a red signal accent, the colour of the one alert that needs you. Calm, brief, protective: it says only what matters, and keeps other people's mail to itself. */
+:root {
+  --brand-50: #fef2f2;
+  --brand-50-rgb: 254 242 242;
+  --brand-100: #fee2e2;
+  --brand-100-rgb: 254 226 226;
+  --brand-200: #fecaca;
+  --brand-200-rgb: 254 202 202;
+  --brand-300: #fca5a5;
+  --brand-300-rgb: 252 165 165;
+  --brand-400: #f87171;
+  --brand-400-rgb: 248 113 113;
+  --brand-500: #ef4444;
+  --brand-500-rgb: 239 68 68;
+  --brand-600: #dc2626;
+  --brand-600-rgb: 220 38 38;
+  --brand-700: #b91c1c;
+  --brand-700-rgb: 185 28 28;
+  --brand-800: #991b1b;
+  --brand-800-rgb: 153 27 27;
+  --brand-900: #7f1d1d;
+  --brand-900-rgb: 127 29 29;
+  --brand-950: #450a0a;
+  --brand-950-rgb: 69 10 10;
+  --accent: #F05050;
+  --accent-rgb: 240 80 80;
+  --color-bg: #0D1117;
+  --color-bg-rgb: 13 17 23;
+  --color-surface: #161B22;
+  --color-surface-rgb: 22 27 34;
+  --color-text: #E7ECF2;
+  --color-text-rgb: 231 236 242;
+  --color-muted: #8A95A4;
+  --color-muted-rgb: 138 149 164;
+  --font-sans: Inter, -apple-system, system-ui, sans-serif;
+  --font-display: Inter, -apple-system, system-ui, sans-serif;
+}
+/* light theme: applied by the shell's theme toggle (data-theme="light"). */
+:root[data-theme="light"] {
+  --color-bg: #F4F6F9;
+  --color-bg-rgb: 244 246 249;
+  --color-surface: #FFFFFF;
+  --color-surface-rgb: 255 255 255;
+  --color-text: #141821;
+  --color-text-rgb: 20 24 33;
+  --color-muted: #5A6472;
+  --color-muted-rgb: 90 100 114;
+}

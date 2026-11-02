@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- synced from brand-packs/content; do not edit here -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guide | Triage</title>
+<link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="theme-color" content="#0D1117">
+<link rel="stylesheet" href="brand-base.css">
+<link rel="stylesheet" href="brand-triage.css">
+<style>body { background: var(--color-bg); margin: 0; }</style>
+</head>
+<body>
+<!--
+  Canonical Guide page for the app family. Token-themed (brand-pack CSS variables),
+  config-driven. Copy into an app, load its brand-pack tokens, and edit the CONFIG.
+
+  This is the "how to drive the tool" page, distinct from About (who we are, why it
+  exists). Keep it to what the tool does and the steps to use it. UK English, no em
+  dashes. The render below builds from the GUIDE object, so edit the object, not the
+  markup.
+-->
+<style>
+  .guide { max-width: 42rem; margin: 0 auto; padding: 3rem 1.25rem 4rem;
+    color: var(--color-text, #1a1a1e);
+    font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif);
+    line-height: 1.6; }
+  .guide h1 { font-family: var(--font-display, inherit); font-size: 2.25rem; margin: 0 0 .75rem; line-height: 1.1; }
+  .guide .lead { font-size: 1.15rem; color: var(--color-text, #1a1a1e); }
+  .guide h2 { font-size: 1.25rem; margin: 2.25rem 0 .75rem; }
+  .guide ol.steps { list-style: none; counter-reset: step; margin: 0; padding: 0; }
+  .guide ol.steps > li { counter-increment: step; position: relative; padding: 0 0 1.25rem 3rem; }
+  .guide ol.steps > li::before { content: counter(step); position: absolute; left: 0; top: 0;
+    width: 2rem; height: 2rem; border-radius: 999px; display: grid; place-items: center;
+    font-family: var(--font-mono, ui-monospace, monospace); font-size: .9rem; font-weight: 700;
+    color: var(--brand-500, #3a6ea5);
+    border: 1px solid color-mix(in srgb, var(--brand-500, #3a6ea5) 45%, transparent);
+    background: color-mix(in srgb, var(--brand-500, #3a6ea5) 12%, transparent); }
+  .guide ol.steps .st { font-weight: 700; display: block; margin-bottom: .1rem; }
+  .guide ol.steps .sb { color: var(--color-muted, #566); }
+  .guide ul.tips { margin: 0; padding-left: 1.1rem; }
+  .guide ul.tips li { margin: 0 0 .4rem; }
+  .guide a { color: var(--brand-500, #3a6ea5); }
+  .guide .more { margin-top: 2.5rem; font-size: .95rem; color: var(--color-muted, #566); }
+</style>
+
+<!-- A way home. A tool added to a phone's home screen has no browser Back button,
+     so without this link these pages are a dead end. -->
+<p class="page-back" style="max-width:42rem;margin:1.25rem auto 0;padding:0 1.25rem;font-family:var(--font-sans,system-ui,sans-serif);font-size:.95rem"><a href="/" style="color:var(--brand-500,#3a6ea5);text-decoration:none">&larr; Back to the app</a></p>
+<article class="guide"></article>
+
+<script>
+const GUIDE = {
+  name: "Triage",
+  tagline: "Everything happens in your Telegram chat with the bot. There is nothing to sign in to here.",
+  intro: "Triage sorts each new email into needs you, for information, newsletter or junk. Needs you arrives straight away; the rest comes in a digest at 8am and 5pm UK time.",
+  steps: [
+    { title: "Ask to join", body: "On the home page, tap Ask to join. Telegram opens the Triage bot: press Start. Helen approves each person, and the bot says hello when she does." },
+    { title: "Connect your inbox", body: "Send /connect Gmail (or any name, such as /connect Work) and sign in with Google. At Google's 'hasn't verified this app' warning, tap Advanced, then Go to triage.hw-tools.io." },
+    { title: "Answer with a tap", body: "Each alert has Done and Not important. Each newsletter sender is asked about once: Unsubscribe or Keep." },
+    { title: "Choose how hands-on it is", body: "/mode watch only tells you. /mode act also archives newsletters, junk and senders you have muted." },
+  ],
+  tips: [
+    "/status shows what is connected and when it last checked.",
+    "/digest sends the digest now, rather than waiting for 8am or 5pm.",
+    "/disconnect Gmail removes one inbox; /leave removes everything and deletes all of it.",
+    "/privacy repeats what is kept and who can see it.",
+  ],
+  aboutHref: "/about",
+  aboutLabel: "About",
+}
+;(function () {
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]))
+  const g = GUIDE
+  const steps = (g.steps || []).map((s) =>
+    `<li><span class="st">${esc(s.title)}</span><span class="sb">${esc(s.body)}</span></li>`).join("")
+  const tips = (g.tips && g.tips.length)
+    ? `<h2>Tips</h2><ul class="tips">${g.tips.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>`
+    : ""
+  const more = g.aboutHref
+    ? `<p class="more">Want the why behind it? Read <a href="${esc(g.aboutHref)}">${esc(g.aboutLabel || "About")}</a>.</p>`
+    : ""
+  document.querySelector(".guide").innerHTML =
+    `<h1>Using ${esc(g.name)}</h1>` +
+    `<p class="lead">${esc(g.tagline)}</p>` +
+    `<p>${esc(g.intro)}</p>` +
+    `<h2>How to use it</h2>` +
+    `<ol class="steps">${steps}</ol>` +
+    tips + more
+})()
+</script>
+
+</body>
+</html>
