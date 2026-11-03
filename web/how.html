@@ -13,7 +13,12 @@
   <link rel="stylesheet" href="brand-triage.css">
   <link rel="stylesheet" href="shell.css">
   <style>
-    .content { max-width: 860px; }
+    /* Only the page column scrolls, so the menu and top bar stay put and a jump
+       lands its heading in view. The text column is centred at a readable width. */
+    .app-shell { height: 100vh; height: 100dvh; }
+    .layout { min-height: 0; overflow: hidden; }
+    .content > * { max-width: 920px; margin-inline: auto; }
+    .section { scroll-margin-top: 16px; }
     .lead { font-size: 15.5px; line-height: 1.6; margin: 0 0 4px; }
     .prose { font-size: 14.5px; line-height: 1.65; }
     .prose p { margin: 0 0 10px; }
